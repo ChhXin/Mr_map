@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html id="htmlId">
+
+<head>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Cache-control" content="no-cache">
+  <link rel="shortcut icon" href="favicon.ico">
+  <title>Mr_map</title>
+  <script src="./xlsx.full.min.js"></script>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=zdz10LCTkxaj1QhMOGSU6XayLQdGqPwZ"></script>
+</head>
+
+<body>
+  <h1>地图数据导出测试</h1>
+  <input type="file" onchange="importf(this)" />
+  <div id="demo"></div>
+  <br />
+  <div id="allmap"></div>
+  <button onclick="start()">开始计算</button>
+  <br />
+  <div><button onclick="downloadExl(fData)">导出数据</button></div>
+  <br />
+  <div><a href="" download="导出数据文件.xlsx" id="hf"></a></div>
+</body>
+<script src="./xlsx.js"></script>
+<script>
+  let fData = [];
+
+  function getLength(startLong, startLat, endLong, endLat, startName, endName) {
+    // 百度地图API功能
+    var time, distance;
+    var map = new BMap.Map("allmap");
+    var start = new BMap.Point(startLong, startLat);
+    var end = new BMap.Point(endLong, endLat);
+    map.centerAndZoom(new BMap.Point(116.404, 39.915), 12);
+    var searchComplete = function (results) {
+      if (transit.getStatus() != BMAP_STATUS_SUCCESS) {
+        return;
+      }
+      var plan = results.getPlan(0);
+      //获取时间
+      time = plan.getDuration(false) / 60;
+      //获取距离
+      distance = plan.getDistance(true);
+    }
+    var transit = new BMap.DrivingRoute(map, {
+      renderOptions: { map: map },
+      onSearchComplete: searchComplete,
+      onPolylinesSet: function () {
+        let res = { "start": startName, "end": endName, "time": time, "distance": distance };
+        fData.push(res);
+        console.error(fData);
+      }
+    });
+    transit.search(start, end);
+
+  }
+
+  function start() {
+    let air = JSON.parse(localStorage.getItem("airport"));
+    // let a4 = JSON.parse(localStorage.getItem("a4"));
+    let a5 = JSON.parse(localStorage.getItem("a5"));
+    // let scenic = a4.concat(a5);
+    let a = 0
+    //求4A和5A景区到各个机场的时间和距离
+    air.forEach((element, index) => {
+      a5.forEach((i, s) => {
+        if (i.name && element.name) {
+          getLength(element.long, element.lat, i.long, i.lat, element.name, i.name);
+        }
+      })
+    });
+
+  }
+</script>
+
+</html>
