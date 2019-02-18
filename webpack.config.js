@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -75,15 +75,15 @@ module.exports = {
             }
         ]
     },
-    plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new HtmlWebpackPlugin({
-            title: 'Mr_map',
-            filename: "index.html",//输出html文件，打包时插入js,不用自己手动引入
-            inject: 'body',  //js插入的位置，true/'head'/'body'/false
-            hash: true
-        }),
-    ],
+    // plugins: [
+    //     new webpack.HotModuleReplacementPlugin(),
+    //     new HtmlWebpackPlugin({
+    //         title: 'Mr_map',
+    //         filename: "index.html",//输出html文件，打包时插入js,不用自己手动引入
+    //         inject: 'body',  //js插入的位置，true/'head'/'body'/false
+    //         hash: true
+    //     }),
+    // ],
     devServer: {
         host: 'localhost', //默认localhost
         contentBase: path.resolve(__dirname, 'public'), //默认当前工程目录
